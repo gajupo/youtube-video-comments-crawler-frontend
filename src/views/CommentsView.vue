@@ -29,6 +29,7 @@
   import { ref } from 'vue';
   import axios from 'axios';
   import Cookies from 'js-cookie';
+  import { apiBaseUrl } from '../config'
   
   export default {
     setup() {
@@ -38,7 +39,7 @@
       const fetchComments = async () => {
         try {
           const token = Cookies.get('userToken');
-          const response = await axios.get(`http://localhost:8081/api/comments/${videoId.value}`, {
+          const response = await axios.get(`${apiBaseUrl}/comments/${videoId.value}`, {
             headers: { Authorization: `Bearer ${token}` },
           });
           comments.value = response.data;

@@ -20,6 +20,8 @@
   import axios from 'axios';
   import Cookies from 'js-cookie';
   import emitter from '../services/eventBus'
+  import { apiBaseUrl } from '../config'
+
   
   export default {
     setup() {
@@ -28,7 +30,7 @@
   
       const login = async () => {
         try {
-          const response = await axios.post('http://localhost:8081/api/auth/login', { password: password.value });
+          const response = await axios.post(`${apiBaseUrl}/auth/login`, { password: password.value });
           Cookies.set('userToken', response.data.token, { secure: true, sameSite: 'Strict' });
           emitter.emit('authChange', { loggedIn: true });
           router.push({ name: 'Comments' });
