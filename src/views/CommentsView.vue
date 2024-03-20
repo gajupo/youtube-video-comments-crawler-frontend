@@ -1,8 +1,8 @@
 <template>
     <div class="container mt-5">
       <div class="mb-3">
-        <label for="videoId" class="form-label">YouTube Video ID</label>
-        <input type="text" class="form-control" id="videoId" v-model="videoId">
+        <label for="URLVideoId" class="form-label">YouTube URL Video</label>
+        <input type="text" class="form-control" id="URLVideoId" v-model="URLVideoId">
       </div>
       <button @click="fetchComments" class="btn btn-primary">Get Comments</button>
   
@@ -33,13 +33,15 @@
   
   export default {
     setup() {
-      const videoId = ref('');
+      const URLVideoId = ref('');
       const comments = ref([]);
   
       const fetchComments = async () => {
         try {
           const token = Cookies.get('userToken');
-          const response = await axios.get(`${apiBaseUrl}/comments/${videoId.value}`, {
+          console.log(URLVideoId.value)
+          const videoId = extractYouTubeVideoID(URLVideoId.value)
+          const response = await axios.get(`${apiBaseUrl}/comments/${videoId}`, {
             headers: { Authorization: `Bearer ${token}` },
           });
           comments.value = response.data;
@@ -48,8 +50,28 @@
           alert('Failed to fetch comments!');
         }
       };
+
+      const extractYouTubeVideoID = function(url) {
+        try {
+            console.log(url);
+            const urlObj = new URL(url);
+            if (urlObj.hostname === 'www.youtube.com' || urlObj.hostname === 'youtube.com') {
+            return urlObj.searchParams.get('v');
+            }
+            else if (urlObj.hostname === 'youtu.be') {
+                return urlObj.pathname.substring(1);
+            }
+            else {
+                return null;
+            }
+        } catch (error) {
+            console.error('Invalid URL:', error);
+            alert('Invalid URL!');
+            return null;
+        }
+      };
   
-      return { videoId, comments, fetchComments };
+      return { URLVideoId: URLVideoId, comments, fetchComments };
     }
   };
   </script>
