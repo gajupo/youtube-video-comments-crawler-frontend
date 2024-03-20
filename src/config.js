@@ -1,3 +1,3 @@
-const apiBaseUrl = process.env.BACKEND_API_URL || 'http://localhost:8081/api';
+const apiBaseUrl = process.env.BACKEND_API_URL || 'https://whale-app-qtzuz.ondigitalocean.app/';
 
 export { apiBaseUrl };
